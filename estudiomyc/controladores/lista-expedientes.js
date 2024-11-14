@@ -119,7 +119,6 @@ function mostrarExpedientes() {
 btnNuevo.addEventListener('click', () => {
 
     // Limpiamos los inputs
-    inputId.value = null;
     inputTipoExpediente.value = null;
     inputNroExpediente.value = null;
     inputJuzgado.value = null;
@@ -213,7 +212,6 @@ on(document, 'click', '.btn-editar', e => {
 
 
     // Asignamos los valores a los input del formulario
-    inputId.value = expediente.id;
     inputTipoExpediente.value = expediente.tipoExpediente;
     inputNroExpediente.value = expediente.nroExpediente;
     inputJuzgado.value = expediente.juzgado;

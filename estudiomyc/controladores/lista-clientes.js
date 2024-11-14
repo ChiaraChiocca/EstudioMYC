@@ -93,7 +93,7 @@ function mostrarClientes() {
                         </h5>
                         <p class="card-text">
                             <strong>Nombre: </strong><span name="spanNombres">${cliente.nombres}</span><br>
-                            <strong>DNI: </strong><span name="spanTipoDni">${cliente.tipoDni}</span><br>
+                            <strong>DNI: </strong><span name="spanTipoDni">${cliente.tipoDNI}</span><br>
                             <strong>Tipo Persona: </strong><span name="spanTipoPersona">${cliente.tipoPersona === 1 ? 'Física' : 'Jurídica'}</span><br>
                             <strong>Domicilio: </strong><span name="spanDomicilio">${cliente.domicilio}</span><br>
                             <strong>Teléfono: </strong><span name="spanTelefono">${cliente.telefono}</span><br>
@@ -123,7 +123,6 @@ function mostrarClientes() {
 btnNuevo.addEventListener('click', () => {
 
     // Limpiamos los inputs
-    inputId.value = null;
     inputTipoPersona.value = null;
     inputTipoDni.value = null;
     inputApellidoRsocial.value = null;
@@ -219,7 +218,6 @@ on(document, 'click', '.btn-editar', e => {
 
 
     // Asignamos los valores a los input del formulario
-    inputId.value = cliente.id;
     inputTipoPersona.value = cliente.tipoPersona;
     inputTipoDni.value = cliente.tipoDni;
     inputApellidoRsocial.value = cliente.apellidoRsocial;

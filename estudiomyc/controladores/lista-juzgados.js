@@ -86,7 +86,7 @@ function mostrarJuzgados() {
                         </h5>
                         <p class="card-text">
                             <strong>Nro. Juzgado: </strong><span name="spanNroJuzgado">${juzgado.nroJuzgado}</span><br>
-                            <strong>Juez de Trámite: </strong><span name="spanJueztram">${juzgado.jueztram}</span><br>
+                            <strong>Juez de Trámite: </strong><span name="spanJueztram">${juzgado.juezTram}</span><br>
                             <strong>Secretario: </strong><span name="spanSecretario">${juzgado.secretario}</span><br>
                             <strong>Teléfono: </strong><span name="spanTelefono">${juzgado.telefono}</span><br>
                         </p>
@@ -108,7 +108,6 @@ function mostrarJuzgados() {
 btnNuevo.addEventListener('click', () => {
 
     // Limpiamos los inputs
-    inputId.value = null;
     inputNroJuzgado.value = null;
     inputNombreJuzgado.value = null;
     inputJuezTram.value = null;
@@ -197,7 +196,6 @@ on(document, 'click', '.btn-editar', e => {
 
 
     // Asignamos los valores a los input del formulario
-    inputId.value = juzgado.id;
     inputNroJuzgado.value = juzgado.nroJuzgado;
     inputNombreJuzgado.value = juzgado.nombreJuzgado;
     inputJuezTram.value = juzgado.juezTram;
