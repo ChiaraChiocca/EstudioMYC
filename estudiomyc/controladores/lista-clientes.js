@@ -14,7 +14,7 @@ const btnNuevo = document.querySelector("#btnNuevo");
 // Inputs
 const inputId = document.querySelector("#id");
 const inputTipoPersona = document.querySelector("#tipoPersona");
-const inputTipoDni = document.querySelector("#tipoDni");
+const inputTipoDNI = document.querySelector("#tipoDni");
 const inputApellidoRsocial = document.querySelector("#apellidoRsocial");
 const inputNombres = document.querySelector("#nombres");
 const inputDomicilio = document.querySelector("#domicilio");
@@ -124,7 +124,7 @@ btnNuevo.addEventListener('click', () => {
 
     // Limpiamos los inputs
     inputTipoPersona.value = null;
-    inputTipoDni.value = null;
+    inputTipoDNI.value = null;
     inputApellidoRsocial.value = null;
     inputNombres.value = null;
     inputDomicilio.value = null;
@@ -162,6 +162,7 @@ formulario.addEventListener('submit', (e) => {
             break;
     }
     insertarAlerta(mensajeAlerta, 'success');
+    obtenerClientes();
     mostrarClientes();
 
 })
@@ -208,18 +209,10 @@ on(document, 'click', '.btn-editar', e => {
     id = cardFooter.querySelector('.id-cliente').value;
     cliente = clientes.find(item => item.id == id);
     console.log(cliente);
-    /*
-    const codigo = cardFooter.parentNode.querySelector('span[name=spancodigo]').innerHTML;
-    const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML;
-    const descripcion = cardFooter.parentNode.querySelector('.div-descripcion').innerHTML;
-    const precio = cardFooter.parentNode.querySelector('span[name=spanprecio]').innerHTML;
-    const imagen = cardFooter.parentNode.querySelector('.imagen-articulo').value;
-    */
-
 
     // Asignamos los valores a los input del formulario
     inputTipoPersona.value = cliente.tipoPersona;
-    inputTipoDni.value = cliente.tipoDni;
+    inputTipoDNI.value = cliente.tipoDNI;
     inputApellidoRsocial.value = cliente.apellidoRsocial;
     inputNombres.value = cliente.nombres;
     inputDomicilio.value = cliente.domicilio;
@@ -249,10 +242,12 @@ on(document, 'click', '.btn-borrar', e => {
     const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML
     */
 
-    let aceptar = confirm(`¿Relamente desea eliminar al cliente ${cliente.nombres}?`);
+    cliente = clientes.find(item => item.id == id);
+
+    let aceptar = confirm(`¿Relamente desea eliminar al cliente ${cliente.apellidoRsocial}${cliente.nombres}?`);
     if (aceptar) {
         eliminarClientes(id);
-        insertarAlerta(`${cliente.nombres} borrado`, 'danger');
+        insertarAlerta(`${cliente.apellidoRsocial}${cliente.nombres} borrado`, 'danger');
         mostrarClientes();
     }
 })

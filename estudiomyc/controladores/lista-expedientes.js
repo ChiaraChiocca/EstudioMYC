@@ -156,6 +156,7 @@ formulario.addEventListener('submit', (e) => {
             break;
     }
     insertarAlerta(mensajeAlerta, 'success');
+    obtenerExpedientes();
     mostrarExpedientes();
 
 })
@@ -202,14 +203,6 @@ on(document, 'click', '.btn-editar', e => {
     id = cardFooter.querySelector('.id-expediente').value;
     expediente = expedientes.find(item => item.id == id);
     console.log(expediente);
-    /*
-    const codigo = cardFooter.parentNode.querySelector('span[name=spancodigo]').innerHTML;
-    const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML;
-    const descripcion = cardFooter.parentNode.querySelector('.div-descripcion').innerHTML;
-    const precio = cardFooter.parentNode.querySelector('span[name=spanprecio]').innerHTML;
-    const imagen = cardFooter.parentNode.querySelector('.imagen-articulo').value;
-    */
-
 
     // Asignamos los valores a los input del formulario
     inputTipoExpediente.value = expediente.tipoExpediente;
@@ -241,7 +234,9 @@ on(document, 'click', '.btn-borrar', e => {
     const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML
     */
 
-    let aceptar = confirm(`¿Relamente desea eliminar el expediente  ${expediente.nroExpediente}?`);
+    expediente = expedientes.find(item => item.id == id);
+
+    let aceptar = confirm(`¿Relamente desea eliminar el expediente ${expediente.nroExpediente}?`);
     if (aceptar) {
         eliminarExpedientes(id);
         insertarAlerta(`${expediente.nroExpediente} borrado`, 'danger');

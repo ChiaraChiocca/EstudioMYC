@@ -140,6 +140,7 @@ formulario.addEventListener('submit', (e) => {
             break;
     }
     insertarAlerta(mensajeAlerta, 'success');
+    obtenerJuzgados();
     mostrarJuzgados();
 
 })
@@ -186,14 +187,6 @@ on(document, 'click', '.btn-editar', e => {
     id = cardFooter.querySelector('.id-juzgado').value;
     juzgado = juzgados.find(item => item.id == id);
     console.log(juzgado);
-    /*
-    const codigo = cardFooter.parentNode.querySelector('span[name=spancodigo]').innerHTML;
-    const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML;
-    const descripcion = cardFooter.parentNode.querySelector('.div-descripcion').innerHTML;
-    const precio = cardFooter.parentNode.querySelector('span[name=spanprecio]').innerHTML;
-    const imagen = cardFooter.parentNode.querySelector('.imagen-articulo').value;
-    */
-
 
     // Asignamos los valores a los input del formulario
     inputNroJuzgado.value = juzgado.nroJuzgado;
@@ -219,6 +212,8 @@ on(document, 'click', '.btn-borrar', e => {
     /*
     const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML
     */
+
+    juzgado = juzgados.find(item => item.id == id);
 
     let aceptar = confirm(`¿Relamente desea eliminar el juzgado ${juzgado.nombreJuzgado}?`);
     if (aceptar) {
