@@ -52,7 +52,8 @@
     <div id="alerta"></div>
     <main class="container">
         <!-- Botón que inicia el Modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="btnNuevo">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formularioModal"
+            id="btnNuevo">
             Nuevo Expediente
         </button>
 
@@ -84,14 +85,14 @@
                                     <label for="id">ID</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="text" name="tipoexpediente" id="tipoexpediente" class="form-control"
+                                    <input type="text" name="tipoExpediente" id="tipoExpediente" class="form-control"
                                         placeholder="Tipo Expediente" />
-                                    <label for="tipoexpediente">Tipo Expediente (J-Judicial / E-Extrajudicial)</label>
+                                    <label for="tipoExpediente">Tipo Expediente (J-Judicial / E-Extrajudicial)</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="text" name="nroexpediente" id="nroexpediente" class="form-control"
+                                    <input type="text" name="nroExpediente" id="nroExpediente" class="form-control"
                                         placeholder="Nro. Expediente" />
-                                    <label for="nroexpediente">Nro. Expediente</label>
+                                    <label for="nroExpediente">Nro. Expediente</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
                                     <input type="text" name="juzgado" id="juzgado" class="form-control"
@@ -104,13 +105,13 @@
                                     <label for="caratula">Carátula</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="date" name="fechainicio" id="fechainicio" class="form-control" />
-                                    <label for="fechainicio">Fecha Inicio</label>
+                                    <input type="date" name="fechaInicio" id="fechaInicio" class="form-control" />
+                                    <label for="fechaInicio">Fecha Inicio</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="text" name="tipojuicio" id="tipojuicio" class="form-control"
+                                    <input type="text" name="tipoJuicio" id="tipoJuicio" class="form-control"
                                         placeholder="Tipo Juicio" />
-                                    <label for="tipojuicio">Tipo Juicio</label>
+                                    <label for="tipoJuicio">Tipo Juicio</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
                                     <input type="text" name="acargode" id="acargode" class="form-control"
@@ -118,8 +119,8 @@
                                     <label for="acargode">A cargo de</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="date" name="fechafin" id="fechafin" class="form-control" />
-                                    <label for="fechafin">Fecha Fin</label>
+                                    <input type="date" name="fechaFin" id="fechaFin" class="form-control" />
+                                    <label for="fechaFin">Fecha Fin</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
                                     <input type="text" name="estado" id="estado" class="form-control"
@@ -127,8 +128,8 @@
                                     <label for="estado">Estado (Activo / Resuelto favorable)</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="date" name="fechabaja" id="fechabaja" class="form-control" />
-                                    <label for="fechabaja">Fecha Baja</label>
+                                    <input type="date" name="fechaBaja" id="fechaBaja" class="form-control" />
+                                    <label for="fechaBaja">Fecha Baja</label>
                                 </div>
                             </div>
                         </div>

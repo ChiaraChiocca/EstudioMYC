@@ -26,13 +26,11 @@ const inputFechaBaja = document.querySelector("#fechaBaja");
 
 
 // Variables 
-let buscar = '';
 let opcion = '';
 let id;
 let mensajeAlerta;
 
 let expedientes = [];
-let expedientesFiltrados = [];
 let expediente = {};
 
 // Control de usuario
@@ -48,7 +46,6 @@ let logueado = false;
 document.addEventListener('DOMContentLoaded', async () => {
     controlUsuario();
     expedientes = await obtenerExpedientes();
-    expedientesFiltrados = filtrarPorNombre('');
     mostrarExpedientes();
 });
 
@@ -79,23 +76,13 @@ async function obtenerExpedientes() {
 }
 
 /**
- * Filtra los expedientes por nombre 
- * @param n el nombre del expediente
- * @return expedientes filtrados 
- */
-function filtrarPorNombre(n) {
-    expedientesFiltrados = expedientes.filter(items => items.nombre.includes(n));
-    return expedientesFiltrados;
-}
-
-/**
  * Muestra los expedientes
  * 
  */
 function mostrarExpedientes() {
     listado.innerHTML = '';
-    expedientesFiltrados.map((expediente) =>
-    (listado.innerHTML += `
+    expedientes.forEach((expediente) => {
+        (listado.innerHTML += `
                     <div class="col">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
@@ -123,34 +110,8 @@ function mostrarExpedientes() {
             </div>
         
         `)
-    );
+    });
 }
-
-/**
- * Filtro de los expedientes
- */
-const botonesFiltros = document.querySelectorAll('#filtros button');
-botonesFiltros.forEach(boton => {
-    boton.addEventListener('click', e => {
-        boton.classList.add('active');
-        boton.setAttribute('aria-current', 'page');
-
-
-        botonesFiltros.forEach(otroBoton => {
-            if (otroBoton !== boton) {
-                otroBoton.classList.remove('active');
-                otroBoton.removeAttribute('aria-current');
-            }
-        });
-
-        buscar = boton.innerHTML;
-        if (buscar == 'Todos') {
-            buscar = '';
-        }
-        filtrarPorNombre(buscar);
-        mostrarExpedientes();
-    })
-})
 
 /**
  * Ejecuta el evento click del bóton Nuevo

@@ -21,7 +21,6 @@ const inputTelefono = document.querySelector("#telefono");
 
 
 // Variables 
-let buscar = '';
 let opcion = '';
 let id;
 let mensajeAlerta;

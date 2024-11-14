@@ -52,7 +52,8 @@
     <div id="alerta"></div>
     <main class="container">
         <!-- Botón que inicia el Modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="btnNuevo">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formularioModal"
+            id="btnNuevo">
             Nuevo Cliente
         </button>
 
@@ -84,19 +85,19 @@
                                     <label for="id">ID</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="number" name="tipopersona" id="tipopersona" class="form-control"
+                                    <input type="number" name="tipoPersona" id="tipoPersona" class="form-control"
                                         placeholder="Tipo Persona" />
-                                    <label for="tipopersona">Tipo Persona (1 - Física, 2 - Jurídica)</label>
+                                    <label for="tipoPersona">Tipo Persona (1 - Física, 2 - Jurídica)</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="text" name="tipodni" id="tipodni" class="form-control"
+                                    <input type="text" name="tipoDni" id="tipoDni" class="form-control"
                                         placeholder="Tipo DNI" />
-                                    <label for="tipodni">Tipo y Nro. Documento</label>
+                                    <label for="tipoDni">Tipo y Nro. Documento</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
-                                    <input type="text" name="apellidorsocial" id="apellidorsocial" class="form-control"
+                                    <input type="text" name="apellidoRsocial" id="apellidoRsocial" class="form-control"
                                         placeholder="Apellido o Razón Social" />
-                                    <label for="apellidorsocial">Apellido o Razón Social</label>
+                                    <label for="apellidoRsocial">Apellido o Razón Social</label>
                                 </div>
                                 <div class="form-floating col-md-6 mb-3">
                                     <input type="text" name="nombres" id="nombres" class="form-control"

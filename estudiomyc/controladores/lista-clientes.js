@@ -28,7 +28,6 @@ const inputFbaja = document.querySelector("#fbaja");
 
 
 // Variables 
-let buscar = '';
 let opcion = '';
 let id;
 let mensajeAlerta;
@@ -49,7 +48,6 @@ let logueado = false;
 document.addEventListener('DOMContentLoaded', async () => {
     controlUsuario();
     clientes = await obtenerClientes();
-    clientesFiltrados = filtrarPorNombre('');
     mostrarClientes();
 });
 
@@ -80,23 +78,13 @@ async function obtenerClientes() {
 }
 
 /**
- * Filtra los clientes por nombre 
- * @param n el nombre del cliente 
- * @return clientes filtrados 
- */
-function filtrarPorNombre(n) {
-    clientesFiltrados = clientes.filter(items => items.nombre.includes(n));
-    return clientesFiltrados;
-}
-
-/**
  * Muestra los clientes 
  * 
  */
 function mostrarClientes() {
     listado.innerHTML = '';
-    clientesFiltrados.map((cliente) =>
-    (listado.innerHTML += `
+    clientes.forEach((cliente) => {
+        (listado.innerHTML += `
                    <div class="col">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
@@ -126,34 +114,8 @@ function mostrarClientes() {
             </div>
         
         `)
-    );
+    });
 }
-
-/**
- * Filtro de los clientes
- */
-const botonesFiltros = document.querySelectorAll('#filtros button');
-botonesFiltros.forEach(boton => {
-    boton.addEventListener('click', e => {
-        boton.classList.add('active');
-        boton.setAttribute('aria-current', 'page');
-
-
-        botonesFiltros.forEach(otroBoton => {
-            if (otroBoton !== boton) {
-                otroBoton.classList.remove('active');
-                otroBoton.removeAttribute('aria-current');
-            }
-        });
-
-        buscar = boton.innerHTML;
-        if (buscar == 'Todos') {
-            buscar = '';
-        }
-        filtrarPorNombre(buscar);
-        mostrarClientes();
-    })
-})
 
 /**
  * Ejecuta el evento click del bóton Nuevo
