@@ -76,6 +76,7 @@ async function obtenerJuzgados() {
  */
 function mostrarJuzgados() {
     listado.innerHTML = '';
+    if (!logueado) return; // No muestra nada si no está logueado
     juzgados.forEach((juzgado) => {
         listado.innerHTML += `
             <div class="col">

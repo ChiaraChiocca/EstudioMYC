@@ -83,6 +83,7 @@ async function obtenerClientes() {
  */
 function mostrarClientes() {
     listado.innerHTML = '';
+    if (!logueado) return; // No muestra nada si no está logueado
     clientes.forEach((cliente) => {
         (listado.innerHTML += `
                    <div class="col">
@@ -244,10 +245,10 @@ on(document, 'click', '.btn-borrar', e => {
 
     cliente = clientes.find(item => item.id == id);
 
-    let aceptar = confirm(`¿Relamente desea eliminar al cliente ${cliente.apellidoRsocial}${cliente.nombres}?`);
+    let aceptar = confirm(`¿Relamente desea eliminar al cliente ${cliente.apellidoRsocial} ${cliente.nombres}?`);
     if (aceptar) {
         eliminarClientes(id);
-        insertarAlerta(`${cliente.apellidoRsocial}${cliente.nombres} borrado`, 'danger');
+        insertarAlerta(`${cliente.apellidoRsocial} ${cliente.nombres} borrado`, 'danger');
         mostrarClientes();
     }
 })

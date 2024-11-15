@@ -81,6 +81,7 @@ async function obtenerExpedientes() {
  */
 function mostrarExpedientes() {
     listado.innerHTML = '';
+    if (!logueado) return; // No muestra nada si no está logueado
     expedientes.forEach((expediente) => {
         (listado.innerHTML += `
                     <div class="col">
