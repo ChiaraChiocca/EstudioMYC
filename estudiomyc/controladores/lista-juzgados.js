@@ -124,7 +124,7 @@ btnNuevo.addEventListener('click', () => {
 /**
  *  Ejecuta el evento submit del formulario
  */
-formulario.addEventListener('submit', (e) => {
+formulario.addEventListener('submit', async (e) => {
     e.preventDefault(); // Prevenimos la acción por defecto
 
     const datos = new FormData(formulario); // Guardamos los datos del formulario
@@ -132,18 +132,19 @@ formulario.addEventListener('submit', (e) => {
     switch (opcion) {
         case 'insertar':
             mensajeAlerta = 'Datos guardados';
-            insertarJuzgados(datos);
+            await insertarJuzgados(datos); // Esperamos a que se complete la inserción
             break;
 
         case 'actualizar':
             mensajeAlerta = 'Datos actualizados';
-            actualizarJuzgados(datos, id);
+            await actualizarJuzgados(datos, id); // Esperamos a que se complete la actualización
             break;
     }
-    insertarAlerta(mensajeAlerta, 'success');
-    obtenerJuzgados();
-    mostrarJuzgados();
 
+    insertarAlerta(mensajeAlerta, 'success');
+    // Actualizamos los juzgados y mostramos la lista de nuevo
+    juzgados = await obtenerJuzgados(); // Obtiene los datos más recientes
+    mostrarJuzgados(); // Muestra los juzgados actualizados
 })
 
 /**
@@ -206,20 +207,18 @@ on(document, 'click', '.btn-editar', e => {
 /**
  * Función para el botón Borrar
  */
-on(document, 'click', '.btn-borrar', e => {
+on(document, 'click', '.btn-borrar', async (e) => {
     const cardFooter = e.target.parentNode;
     id = cardFooter.querySelector('.id-juzgado').value;
-
-    /*
-    const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML
-    */
 
     juzgado = juzgados.find(item => item.id == id);
 
     let aceptar = confirm(`¿Relamente desea eliminar el juzgado ${juzgado.nombreJuzgado}?`);
     if (aceptar) {
-        eliminarJuzgados(id);
+        await eliminarJuzgados(id); // Espera a que se complete la eliminación
         insertarAlerta(`${juzgado.nombreJuzgado} borrado`, 'danger');
-        mostrarJuzgados();
+        // Actualizamos la lista después de la eliminación
+        juzgados = await obtenerJuzgados(); // Obtiene los datos más recientes
+        mostrarJuzgados(); // Muestra los juzgados actualizados
     }
 })

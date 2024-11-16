@@ -140,26 +140,27 @@ btnNuevo.addEventListener('click', () => {
 /**
  *  Ejecuta el evento submit del formulario
  */
-formulario.addEventListener('submit', (e) => {
+formulario.addEventListener('submit', async (e) => {
     e.preventDefault(); // Prevenimos la acción por defecto
 
     const datos = new FormData(formulario); // Guardamos los datos del formulario
 
     switch (opcion) {
         case 'insertar':
-            mensajeAlerta = 'Datos guardados';
-            insertarExpedientes(datos);
+            mensajeAlerta = 'Datos guardados'; // Esperamos a que se complete la inserción
+            await insertarExpedientes(datos);
             break;
 
         case 'actualizar':
             mensajeAlerta = 'Datos actualizados';
-            actualizarExpedientes(datos, id);
+            await actualizarExpedientes(datos, id); // Esperamos a que se complete la actualización
             break;
     }
-    insertarAlerta(mensajeAlerta, 'success');
-    obtenerExpedientes();
-    mostrarExpedientes();
 
+    insertarAlerta(mensajeAlerta, 'success');
+    // Actualizamos los expedientes y mostramos la lista de nuevo
+    expedientes = await obtenerExpedientes(); // Obtiene los datos más recientes
+    mostrarExpedientes(); // Muestra los expedientes actualizados
 })
 
 /**
@@ -227,20 +228,18 @@ on(document, 'click', '.btn-editar', e => {
 /**
  * Función para el botón Borrar
  */
-on(document, 'click', '.btn-borrar', e => {
+on(document, 'click', '.btn-borrar', async (e) => {
     const cardFooter = e.target.parentNode;
     id = cardFooter.querySelector('.id-expediente').value;
-
-    /*
-    const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML
-    */
 
     expediente = expedientes.find(item => item.id == id);
 
     let aceptar = confirm(`¿Relamente desea eliminar el expediente ${expediente.nroExpediente}?`);
     if (aceptar) {
-        eliminarExpedientes(id);
+        await eliminarExpedientes(id); // Espera a que se complete la eliminación
         insertarAlerta(`${expediente.nroExpediente} borrado`, 'danger');
-        mostrarExpedientes();
+        // Actualizamos la lista después de la eliminación
+        expedientes = await obtenerExpedientes(); // Obtiene los datos más recientes
+        mostrarExpedientes(); // Muestra los expedientes actualizados
     }
 })

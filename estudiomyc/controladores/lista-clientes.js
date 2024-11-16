@@ -146,7 +146,7 @@ btnNuevo.addEventListener('click', () => {
 /**
  *  Ejecuta el evento submit del formulario
  */
-formulario.addEventListener('submit', (e) => {
+formulario.addEventListener('submit', async (e) => {
     e.preventDefault(); // Prevenimos la acción por defecto
 
     const datos = new FormData(formulario); // Guardamos los datos del formulario
@@ -154,18 +154,19 @@ formulario.addEventListener('submit', (e) => {
     switch (opcion) {
         case 'insertar':
             mensajeAlerta = 'Datos guardados';
-            insertarClientes(datos);
+            await insertarClientes(datos); // Esperamos a que se complete la inserción
             break;
 
         case 'actualizar':
             mensajeAlerta = 'Datos actualizados';
-            actualizarClientes(datos, id);
+            await actualizarClientes(datos, id); // Esperamos a que se complete la actualización
             break;
     }
-    insertarAlerta(mensajeAlerta, 'success');
-    obtenerClientes();
-    mostrarClientes();
 
+    insertarAlerta(mensajeAlerta, 'success');
+    // Actualizamos los clientes y mostramos la lista de nuevo
+    clientes = await obtenerClientes(); // Obtiene los datos más recientes
+    mostrarClientes(); // Muestra los clientes actualizados
 })
 
 /**
@@ -235,20 +236,18 @@ on(document, 'click', '.btn-editar', e => {
 /**
  * Función para el botón Borrar
  */
-on(document, 'click', '.btn-borrar', e => {
+on(document, 'click', '.btn-borrar', async (e) => {
     const cardFooter = e.target.parentNode;
     id = cardFooter.querySelector('.id-cliente').value;
 
-    /*
-    const nombre = cardFooter.parentNode.querySelector('span[name=spannombre]').innerHTML
-    */
-
     cliente = clientes.find(item => item.id == id);
 
-    let aceptar = confirm(`¿Relamente desea eliminar al cliente ${cliente.apellidoRsocial} ${cliente.nombres}?`);
+    let aceptar = confirm(`¿Realmente desea eliminar al cliente ${cliente.apellidoRsocial} ${cliente.nombres}?`);
     if (aceptar) {
-        eliminarClientes(id);
+        await eliminarClientes(id); // Espera a que se complete la eliminación
         insertarAlerta(`${cliente.apellidoRsocial} ${cliente.nombres} borrado`, 'danger');
-        mostrarClientes();
+        // Actualizamos la lista después de la eliminación
+        clientes = await obtenerClientes(); // Obtiene los datos más recientes
+        mostrarClientes(); // Muestra los clientes actualizados
     }
 })
