@@ -13,6 +13,7 @@ const btnNuevo = document.querySelector("#btnNuevo");
 
 // Inputs
 const inputId = document.querySelector("#id");
+
 const inputTipoPersona = document.querySelector("#tipoPersona");
 const inputTipoDNI = document.querySelector("#tipoDni");
 const inputApellidoRsocial = document.querySelector("#apellidoRsocial");

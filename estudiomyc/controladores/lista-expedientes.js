@@ -1,4 +1,5 @@
 import { seleccionarExpedientes, insertarExpedientes, actualizarExpedientes, eliminarExpedientes } from '../modelos/expedientes.js';
+import { seleccionarClientes } from '../modelos/clientes.js';
 /* Objetos del DOM*/
 // Listado de artículos
 const listado = document.querySelector("#listado");
@@ -13,6 +14,8 @@ const btnNuevo = document.querySelector("#btnNuevo");
 
 // Inputs
 const inputId = document.querySelector("#id");
+
+const inputCliente = document.querySelector("#idcliente");
 const inputTipoExpediente = document.querySelector("#tipoExpediente");
 const inputNroExpediente = document.querySelector("#nroExpediente");
 const inputJuzgado = document.querySelector("#juzgado");
@@ -32,6 +35,8 @@ let mensajeAlerta;
 
 let expedientes = [];
 let expediente = {};
+let clientes = [];
+let cliente = {};
 
 // Control de usuario
 let usuario = '';
@@ -47,6 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     controlUsuario();
     expedientes = await obtenerExpedientes();
     mostrarExpedientes();
+    clientes = await obtenerClientes();
+    mostrarClientes();
 });
 
 /**
@@ -74,6 +81,13 @@ async function obtenerExpedientes() {
     expedientes = await seleccionarExpedientes();
     return expedientes;
 }
+/**
+ * Obtiene los clientes
+ */
+async function obtenerClientes() {
+    clientes = await seleccionarClientes();
+    return clientes;
+}
 
 /**
  * Muestra los expedientes
@@ -88,7 +102,7 @@ function mostrarExpedientes() {
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <span name="spanId">${expediente.id}</span> - <span name="spanCaratura">${expediente.caratura}</span>
+                            <span name="spanId">${expediente.id}</span> - <span name="spanCaratura">${expediente.caratula}</span>
                         </h5>
                         <p class="card-text">
                             <strong>Tipo de Expediente: </strong><span name="spanTipoExpediente">${expediente.tipoExpediente === 'J' ? 'Judicial' : 'Extrajudicial'}</span><br>
@@ -113,6 +127,24 @@ function mostrarExpedientes() {
         `)
     });
 }
+
+/**
+ * Muestra los clientes
+ * 
+ */
+function mostrarClientes() {
+    inputCliente.innerHTML = '';
+    if (!logueado) return; // No muestra nada si no está logueado
+    clientes.forEach((cliente) => {
+        (inputCliente.innerHTML += `
+            <option value="${cliente.id}">${cliente.apellidoRsocial}</option>
+            `
+        )
+    }
+    )
+}
+
+
 
 /**
  * Ejecuta el evento click del bóton Nuevo
