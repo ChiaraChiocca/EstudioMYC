@@ -29,11 +29,13 @@ const inputFbaja = document.querySelector("#fbaja");
 
 
 // Variables 
+let buscar = '';
 let opcion = '';
 let id;
 let mensajeAlerta;
 
 let clientes = [];
+let clientesFiltrados = [];
 let cliente = {};
 
 // Control de usuario
@@ -49,6 +51,7 @@ let logueado = false;
 document.addEventListener('DOMContentLoaded', async () => {
     controlUsuario();
     clientes = await obtenerClientes();
+    clientesFiltrados = filtrarPorNombre('');
     mostrarClientes();
 });
 
@@ -79,13 +82,33 @@ async function obtenerClientes() {
 }
 
 /**
+ * Filtra los clientes por nombre 
+ * @param n el nombre del cliente 
+ * @return clientes filtrados 
+ */
+function filtrarPorNombre(n) {
+    // Si no hay un filtro de búsqueda o es 'Todos', mostrar todos los clientes
+    if (!buscar || buscar === 'Todos') {
+        clientesFiltrados = clientes;
+        return clientesFiltrados;
+    }
+
+    // Filtrar por tipo de persona
+    clientesFiltrados = clientes.filter(cliente =>
+        cliente.tipoPersona.toLowerCase() === buscar.toLowerCase()
+    );
+
+    return clientesFiltrados;
+}
+
+/**
  * Muestra los clientes 
  * 
  */
 function mostrarClientes() {
     listado.innerHTML = '';
     if (!logueado) return; // No muestra nada si no está logueado
-    clientes.forEach((cliente) => {
+    clientesFiltrados.map((cliente) => {
         (listado.innerHTML += `
                    <div class="col">
                 <div class="card" style="width: 18rem;">
@@ -120,6 +143,32 @@ function mostrarClientes() {
 }
 
 /**
+ * Filtro de los clientes
+ */
+const botonesFiltros = document.querySelectorAll('#filtros button');
+botonesFiltros.forEach(boton => {
+    boton.addEventListener('click', e => {
+        boton.classList.add('active');
+        boton.setAttribute('aria-current', 'page');
+
+
+        botonesFiltros.forEach(otroBoton => {
+            if (otroBoton !== boton) {
+                otroBoton.classList.remove('active');
+                otroBoton.removeAttribute('aria-current');
+            }
+        });
+
+        buscar = boton.innerHTML;
+        if (buscar == 'Todos') {
+            buscar = '';
+        }
+        filtrarPorNombre(buscar);
+        mostrarClientes();
+    })
+})
+
+/**
  * Ejecuta el evento click del bóton Nuevo
  */
 btnNuevo.addEventListener('click', () => {
@@ -148,27 +197,36 @@ btnNuevo.addEventListener('click', () => {
  *  Ejecuta el evento submit del formulario
  */
 formulario.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevenimos la acción por defecto
+    e.preventDefault();
 
-    const datos = new FormData(formulario); // Guardamos los datos del formulario
+    const datos = new FormData(formulario);
 
-    switch (opcion) {
-        case 'insertar':
-            mensajeAlerta = 'Datos guardados';
-            await insertarClientes(datos); // Esperamos a que se complete la inserción
-            break;
+    try {
+        switch (opcion) {
+            case 'insertar':
+                await insertarClientes(datos);
+                mensajeAlerta = 'Datos guardados';
+                break;
 
-        case 'actualizar':
-            mensajeAlerta = 'Datos actualizados';
-            await actualizarClientes(datos, id); // Esperamos a que se complete la actualización
-            break;
+            case 'actualizar':
+                await actualizarClientes(datos, id);
+                mensajeAlerta = 'Datos actualizados';
+                break;
+        }
+
+        // Actualizar clientes y mostrar
+        clientes = await obtenerClientes();
+        clientesFiltrados = filtrarPorNombre(buscar);
+        mostrarClientes();
+
+        // Mostrar alerta y cerrar modal
+        insertarAlerta(mensajeAlerta, 'success');
+        formularioModal.hide();
+    } catch (error) {
+        console.error('Error:', error);
+        insertarAlerta('Hubo un error al guardar los datos', 'danger');
     }
-
-    insertarAlerta(mensajeAlerta, 'success');
-    // Actualizamos los clientes y mostramos la lista de nuevo
-    clientes = await obtenerClientes(); // Obtiene los datos más recientes
-    mostrarClientes(); // Muestra los clientes actualizados
-})
+});
 
 /**
  * Define los mensajes de alerta
@@ -245,10 +303,18 @@ on(document, 'click', '.btn-borrar', async (e) => {
 
     let aceptar = confirm(`¿Realmente desea eliminar al cliente ${cliente.apellidoRsocial} ${cliente.nombres}?`);
     if (aceptar) {
-        await eliminarClientes(id); // Espera a que se complete la eliminación
-        insertarAlerta(`${cliente.apellidoRsocial} ${cliente.nombres} borrado`, 'danger');
-        // Actualizamos la lista después de la eliminación
-        clientes = await obtenerClientes(); // Obtiene los datos más recientes
-        mostrarClientes(); // Muestra los clientes actualizados
+        try {
+            await eliminarClientes(id);
+
+            // Actualizar clientes y mostrar
+            clientes = await obtenerClientes();
+            clientesFiltrados = filtrarPorNombre(buscar);
+            mostrarClientes();
+
+            insertarAlerta(`${cliente.apellidoRsocial} ${cliente.nombres} borrado`, 'danger');
+        } catch (error) {
+            console.error('Error:', error);
+            insertarAlerta('Hubo un error al eliminar el cliente', 'danger');
+        }
     }
-})
+});

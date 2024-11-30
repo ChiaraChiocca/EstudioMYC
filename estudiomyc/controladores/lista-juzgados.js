@@ -125,27 +125,35 @@ btnNuevo.addEventListener('click', () => {
  *  Ejecuta el evento submit del formulario
  */
 formulario.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevenimos la acción por defecto
+    e.preventDefault();
 
-    const datos = new FormData(formulario); // Guardamos los datos del formulario
+    const datos = new FormData(formulario);
 
-    switch (opcion) {
-        case 'insertar':
-            mensajeAlerta = 'Datos guardados';
-            await insertarJuzgados(datos); // Esperamos a que se complete la inserción
-            break;
+    try {
+        switch (opcion) {
+            case 'insertar':
+                await insertarJuzgados(datos);
+                mensajeAlerta = 'Datos guardados';
+                break;
 
-        case 'actualizar':
-            mensajeAlerta = 'Datos actualizados';
-            await actualizarJuzgados(datos, id); // Esperamos a que se complete la actualización
-            break;
+            case 'actualizar':
+                await actualizarJuzgados(datos, id);
+                mensajeAlerta = 'Datos actualizados';
+                break;
+        }
+
+        // Actualizar juzgados y mostrar
+        juzgados = await obtenerJuzgados();
+        mostrarJuzgados();
+
+        // Mostrar alerta y cerrar modal
+        insertarAlerta(mensajeAlerta, 'success');
+        formularioModal.hide();
+    } catch (error) {
+        console.error('Error:', error);
+        insertarAlerta('Hubo un error al guardar los datos', 'danger');
     }
-
-    insertarAlerta(mensajeAlerta, 'success');
-    // Actualizamos los juzgados y mostramos la lista de nuevo
-    juzgados = await obtenerJuzgados(); // Obtiene los datos más recientes
-    mostrarJuzgados(); // Muestra los juzgados actualizados
-})
+});
 
 /**
  * Define los mensajes de alerta
@@ -215,10 +223,18 @@ on(document, 'click', '.btn-borrar', async (e) => {
 
     let aceptar = confirm(`¿Relamente desea eliminar el juzgado ${juzgado.nombreJuzgado}?`);
     if (aceptar) {
-        await eliminarJuzgados(id); // Espera a que se complete la eliminación
-        insertarAlerta(`${juzgado.nombreJuzgado} borrado`, 'danger');
-        // Actualizamos la lista después de la eliminación
-        juzgados = await obtenerJuzgados(); // Obtiene los datos más recientes
-        mostrarJuzgados(); // Muestra los juzgados actualizados
+        try {
+            await eliminarJuzgados(id);
+
+            // Actualizar juzgados y mostrar
+            juzgados = await obtenerJuzgados();
+            mostrarJuzgados();
+
+            insertarAlerta(`${juzgado.nombreJuzgado} borrado`, 'danger');
+        } catch (error) {
+            console.error('Error:', error);
+            insertarAlerta('Hubo un error al eliminar el juzgado', 'danger');
+        }
     }
-})
+});
+

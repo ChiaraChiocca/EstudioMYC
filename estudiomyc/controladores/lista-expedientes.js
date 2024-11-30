@@ -29,11 +29,13 @@ const inputFechaBaja = document.querySelector("#fechaBaja");
 
 
 // Variables 
+let buscar = '';
 let opcion = '';
 let id;
 let mensajeAlerta;
 
 let expedientes = [];
+let expedientesFiltrados = [];
 let expediente = {};
 let clientes = [];
 let cliente = {};
@@ -51,6 +53,7 @@ let logueado = false;
 document.addEventListener('DOMContentLoaded', async () => {
     controlUsuario();
     expedientes = await obtenerExpedientes();
+    expedintesFiltrados = filtrarPorNombre('');
     mostrarExpedientes();
     clientes = await obtenerClientes();
     mostrarClientes();
@@ -90,13 +93,33 @@ async function obtenerClientes() {
 }
 
 /**
+ * Filtra los expedientes por nombre 
+ * @param n el nombre del expediente 
+ * @return expedientes filtrados 
+ */
+function filtrarPorNombre(n) {
+    // Si no hay un filtro de búsqueda o es 'Todos', mostrar todos los expedientes
+    if (!buscar || buscar === 'Todos') {
+        expedientesFiltrados = expedientes;
+        return expedientesFiltrados;
+    }
+
+    // Filtrar por tipo de expediente
+    expedientesFiltrados = expedientes.filter(expediente =>
+        expediente.tipoExpediente.toLowerCase() === buscar.toLowerCase()
+    );
+
+    return expedientesFiltrados;
+}
+
+/**
  * Muestra los expedientes
  * 
  */
 function mostrarExpedientes() {
     listado.innerHTML = '';
     if (!logueado) return; // No muestra nada si no está logueado
-    expedientes.forEach((expediente) => {
+    expedientesFiltrados.map((expediente) => {
         (listado.innerHTML += `
                     <div class="col">
                 <div class="card" style="width: 18rem;">
@@ -144,7 +167,31 @@ function mostrarClientes() {
     )
 }
 
+/**
+ * Filtro de los expedientes
+ */
+const botonesFiltros = document.querySelectorAll('#filtros button');
+botonesFiltros.forEach(boton => {
+    boton.addEventListener('click', e => {
+        boton.classList.add('active');
+        boton.setAttribute('aria-current', 'page');
 
+
+        botonesFiltros.forEach(otroBoton => {
+            if (otroBoton !== boton) {
+                otroBoton.classList.remove('active');
+                otroBoton.removeAttribute('aria-current');
+            }
+        });
+
+        buscar = boton.innerHTML;
+        if (buscar == 'Todos') {
+            buscar = '';
+        }
+        filtrarPorNombre(buscar);
+        mostrarExpedientes();
+    })
+})
 
 /**
  * Ejecuta el evento click del bóton Nuevo
@@ -173,27 +220,36 @@ btnNuevo.addEventListener('click', () => {
  *  Ejecuta el evento submit del formulario
  */
 formulario.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevenimos la acción por defecto
+    e.preventDefault();
 
-    const datos = new FormData(formulario); // Guardamos los datos del formulario
+    const datos = new FormData(formulario);
 
-    switch (opcion) {
-        case 'insertar':
-            mensajeAlerta = 'Datos guardados'; // Esperamos a que se complete la inserción
-            await insertarExpedientes(datos);
-            break;
+    try {
+        switch (opcion) {
+            case 'insertar':
+                await insertarExpedientes(datos); 
+                mensajeAlerta = 'Datos guardados';
+                break;
 
-        case 'actualizar':
-            mensajeAlerta = 'Datos actualizados';
-            await actualizarExpedientes(datos, id); // Esperamos a que se complete la actualización
-            break;
+            case 'actualizar':
+                await actualizarExpedientes(datos, id); 
+                mensajeAlerta = 'Datos actualizados';
+                break;
+        }
+
+        // Actualizar expedientes y mostrar
+        expedientes = await obtenerExpedientes();
+        expedientesFiltrados = filtrarPorNombre(buscar);
+        mostrarExpedientes();
+
+        // Mostrar alerta y cerrar modal
+        insertarAlerta(mensajeAlerta, 'success');
+        formularioModal.hide();
+    } catch (error) {
+        console.error('Error:', error);
+        insertarAlerta('Hubo un error al guardar los datos', 'danger');
     }
-
-    insertarAlerta(mensajeAlerta, 'success');
-    // Actualizamos los expedientes y mostramos la lista de nuevo
-    expedientes = await obtenerExpedientes(); // Obtiene los datos más recientes
-    mostrarExpedientes(); // Muestra los expedientes actualizados
-})
+});
 
 /**
  * Define los mensajes de alerta
@@ -268,10 +324,18 @@ on(document, 'click', '.btn-borrar', async (e) => {
 
     let aceptar = confirm(`¿Relamente desea eliminar el expediente ${expediente.nroExpediente}?`);
     if (aceptar) {
-        await eliminarExpedientes(id); // Espera a que se complete la eliminación
-        insertarAlerta(`${expediente.nroExpediente} borrado`, 'danger');
-        // Actualizamos la lista después de la eliminación
-        expedientes = await obtenerExpedientes(); // Obtiene los datos más recientes
-        mostrarExpedientes(); // Muestra los expedientes actualizados
+        try {
+            await eliminarExpedientes(id);
+
+            // Actualizar expedientes y mostrar
+            expedientes = await obtenerExpedientes();
+            expedientesFiltrados = filtrarPorNombre(buscar);
+            mostrarExpedientes();
+
+            insertarAlerta(`${expediente.nroExpediente} borrado`, 'danger');
+        } catch (error) {
+            console.error('Error:', error);
+            insertarAlerta('Hubo un error al eliminar el expediente', 'danger');
+        }
     }
-})
+});
